@@ -1,5 +1,5 @@
 name = "repo-chat-api"
-main = "worker.js"
+main = "worker/worker.js"
 compatibility_date = "2025-08-23"
 
 [vars]

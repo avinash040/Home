@@ -11,3 +11,25 @@ To publish the site with GitHub Pages:
 3. The site will be available at `https://<your-username>.github.io/<repository-name>/`.
 
 Feel free to customize the content or styling to keep the site up to date.
+
+## Worker API
+
+The `worker` directory contains a Cloudflare Worker that backs the `/api/chat` endpoint. It is configured by the `wrangler.toml` file at the repository root, which points to `worker/worker.js` and reads your Gemini API key from the `GEMINI_API_KEY` environment variable.
+
+For local development:
+
+1. Copy `worker/.dev.vars.example` to `worker/.dev.vars`.
+2. Set `GEMINI_API_KEY` in that file.
+3. Run `npx wrangler dev` from the repository root.
+
+For deployment on Cloudflare, store the key as a secret:
+
+```sh
+wrangler secret put GEMINI_API_KEY
+```
+
+Then deploy the worker from the repository root:
+
+```sh
+npx wrangler deploy
+```
