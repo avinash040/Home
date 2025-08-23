@@ -4,6 +4,16 @@
   <meta charset="UTF-8">
   <title>Avinash Kothapalli</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    #chat-container { max-width: 600px; margin: 2rem auto; }
+    #chat-log { border: 1px solid #ccc; padding: 1rem; height: 300px; overflow-y: auto; background: #fafafa; }
+    .message { padding: .5rem; border-radius: 4px; margin-bottom: .5rem; }
+    .message.user { background: #e0f7fa; }
+    .message.bot { background: #f1f8e9; }
+    .message.sources { background: #fff; font-size: 0.8rem; color: #555; }
+    #chat-form { display: flex; gap: .5rem; margin-top: 1rem; }
+    #chat-input { flex: 1; }
+  </style>
 </head>
 <body>
   <header>
@@ -23,6 +33,17 @@
   </header>
 
   <main>
+    <section id="chat">
+      <h2>Chat</h2>
+      <div id="chat-container">
+        <div id="chat-log"></div>
+        <form id="chat-form">
+          <input id="chat-input" type="text" placeholder="Ask a question..." />
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+
     <section id="about">
       <h2>About</h2>
       <p>I am a senior delivery software engineer at Nokia with experience developing custom network software solutions for service providers and enterprises. I create API interfaces for service provisioning, lifecycle management, and automation using YANG models and REST.</p>
@@ -162,5 +183,47 @@
     <p>&copy; <span id="year"></span> Avinash Kothapalli</p>
   </footer>
   <script src="script.js"></script>
+  <script>
+    const WORKER_URL = 'https://repo-chat-api.example.workers.dev'; // replace with your Worker URL
+
+    const log = document.getElementById('chat-log');
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('chat-input');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return;
+      appendMessage('user', text);
+      input.value = '';
+      try {
+        const res = await fetch(`${WORKER_URL}/api/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+        const data = await res.json();
+        if (data.answer) {
+          appendMessage('bot', data.answer);
+          if (data.sources) {
+            const src = data.sources.map(s => `${s.label} • ${s.path} (${s.score.toFixed(2)})`).join(', ');
+            appendMessage('bot', `Sources: ${src}`, 'sources');
+          }
+        } else if (data.error) {
+          appendMessage('bot', data.error);
+        }
+      } catch (err) {
+        appendMessage('bot', 'Error: ' + err.message);
+      }
+    });
+
+    function appendMessage(role, text, extra = '') {
+      const div = document.createElement('div');
+      div.className = `message ${role} ${extra}`;
+      div.textContent = text;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+  </script>
 </body>
 </html>
