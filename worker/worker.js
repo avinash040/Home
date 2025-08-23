@@ -1,4 +1,12 @@
-import { pipeline } from "@xenova/transformers";
+import { pipeline, env } from "@xenova/transformers";
+
+// Configure ONNX runtime for Cloudflare Workers. This ensures the
+// WebAssembly files are fetched from a remote CDN and avoids features
+// (like multi-threading/SIMD) that are not available in the Workers
+// runtime.
+env.backends.onnx.wasm.wasmPaths = `https://cdn.jsdelivr.net/npm/@xenova/transformers@${env.version}/dist/`;
+env.backends.onnx.wasm.numThreads = 1;
+env.backends.onnx.wasm.simd = false;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
