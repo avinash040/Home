@@ -1,4 +1,4 @@
-name = "repo-chat-api"
+name = "personal"
 main = "worker/worker.js"
 compatibility_date = "2025-08-23"
 
