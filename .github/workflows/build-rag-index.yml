@@ -113,12 +113,16 @@ jobs:
           PY
       - name: Commit vectors
         run: |
-          if git diff --quiet --exit-code ${{ env.OUTPUT_DIR }}/${{ env.OUTPUT_FILE }}; then
-            echo "No changes to commit"
-          else
+          if [[ -n "$(git status --porcelain ${{ env.OUTPUT_DIR }}/${{ env.OUTPUT_FILE }})" ]]; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add ${{ env.OUTPUT_DIR }}/${{ env.OUTPUT_FILE }}
             git commit -m "chore: update RAG index"
             git push
+          else
+            echo "No changes to commit"
           fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rag-vectors
+          path: ${{ env.OUTPUT_DIR }}/${{ env.OUTPUT_FILE }}
