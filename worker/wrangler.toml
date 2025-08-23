@@ -1,0 +1,9 @@
+name = "repo-chat-api"
+main = "worker.js"
+compatibility_date = "2025-08-23"
+
+[vars]
+VECTORS_URL = "https://avinash040.github.io/Home/data/vectors.json"
+GEMINI_MODEL = "gemini-2.5-flash"
+TOP_K = "5"
+MAX_CONTEXT_CHARS = "6000"
