@@ -1,12 +1,16 @@
-import { pipeline, env } from "@xenova/transformers";
+import { pipeline, env as tEnv } from "@xenova/transformers";
 
-// Configure ONNX runtime for Cloudflare Workers. This ensures the
-// WebAssembly files are fetched from a remote CDN and avoids features
-// (like multi-threading/SIMD) that are not available in the Workers
-// runtime.
-env.backends.onnx.wasm.wasmPaths = `https://cdn.jsdelivr.net/npm/@xenova/transformers@${env.version}/dist/`;
-env.backends.onnx.wasm.numThreads = 1;
-env.backends.onnx.wasm.simd = false;
+// Pin to the EXACT version installed for @xenova/transformers.
+// If package.json exists, use that version string; otherwise set the
+// dependency in the Dashboard to the same version used here.
+const TRANSFORMERS_VERSION = "2.17.2";
+
+tEnv.backends.onnx.wasm.wasmPaths =
+  `https://cdn.jsdelivr.net/npm/@xenova/transformers@${TRANSFORMERS_VERSION}/dist/`;
+tEnv.backends.onnx.wasm.numThreads = 1;
+tEnv.backends.onnx.wasm.simd = false;
+tEnv.useBrowserCache = true;
+tEnv.allowLocalModels = false;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -92,7 +96,7 @@ export default {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
             generationConfig: { temperature: 0.2, maxOutputTokens: 1000 },
           }),
         }
