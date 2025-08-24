@@ -1,12 +1,12 @@
 import { pipeline, env as tEnv } from "@xenova/transformers";
 
-// Pin to the EXACT version installed for @xenova/transformers.
-// If package.json exists, use that version string; otherwise set the
-// dependency in the Dashboard to the same version used here.
-const TRANSFORMERS_VERSION = "2.17.2";
+// EXACT versions you actually have installed (update both if you change deps)
+const TRANSFORMERS_VERSION = "2.13.3";
+const ORT_VERSION = "1.18.0";
 
+// Prefer ORT’s own CDN path (more stable than bundling inside transformers dist)
 tEnv.backends.onnx.wasm.wasmPaths =
-  `https://cdn.jsdelivr.net/npm/@xenova/transformers@${TRANSFORMERS_VERSION}/dist/`;
+  `https://cdn.jsdelivr.net/npm/onnxruntime-web@${ORT_VERSION}/dist/`;
 tEnv.backends.onnx.wasm.numThreads = 1;
 tEnv.backends.onnx.wasm.simd = false;
 tEnv.useBrowserCache = true;
@@ -31,6 +31,25 @@ export default {
 
     if (request.method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders });
+    }
+
+    if (url.pathname === "/__wasm_check" && request.method === "GET") {
+      const base = `https://cdn.jsdelivr.net/npm/onnxruntime-web@${ORT_VERSION}/dist/`;
+      const files = [
+        "ort-wasm.wasm",
+        "ort-wasm-simd.wasm",
+        "ort-wasm-threaded.wasm",
+        "ort-wasm-simd-threaded.wasm",
+      ];
+      const results = await Promise.all(
+        files.map(async (f) => {
+          const r = await fetch(base + f, { method: "HEAD" });
+          return { file: f, ok: r.ok, status: r.status };
+        })
+      );
+      return new Response(JSON.stringify({ base, results }, null, 2), {
+        headers: { "content-type": "application/json" },
+      });
     }
 
     if (url.pathname !== "/api/chat" || request.method !== "POST") {
