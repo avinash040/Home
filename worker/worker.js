@@ -67,7 +67,10 @@ export default {
         // ignore retrieval errors and fall back to no context
       }
 
-      const parts = [];
+      const instruction =
+        "You are answering on behalf of Avinash Kothapalli. " +
+        "Speak in the first person when describing his work experience.";
+      const parts = [{ text: instruction }];
       if (context) {
         parts.push({ text: context });
       }

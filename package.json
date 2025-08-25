@@ -4,7 +4,8 @@
   "description": "This repository contains the source for my personal website. The site highlights my professional experience, projects and links to my resume.",
   "main": "script.js",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "build:vectors": "node scripts/build-vectors.mjs"
   },
   "keywords": [],
   "author": "",
