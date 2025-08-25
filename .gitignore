@@ -1,5 +1,3 @@
-# Ignore local development secrets
-worker/.dev.vars
-
-# Ignore node modules
-node_modules/
+node_modules
+.dev.vars
+dist

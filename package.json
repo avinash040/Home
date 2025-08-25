@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "type": "module",
-  "dependencies": {
-    "@xenova/transformers": "2.13.3"
+  "devDependencies": {
+    "wrangler": "^4.32.0"
   }
 }
