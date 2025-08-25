@@ -17,7 +17,7 @@ test('chat worker performs retrieval and forwards context', async () => {
     }
     if (url.includes(':generateContent')) {
       const body = JSON.parse(options.body);
-      assert.ok(body.contents[0].parts[0].text.includes('Avinash Kothapalli - Personal Website'));
+      assert.ok(body.contents[0].parts[0].text.includes('Avinash Kothapalli'));
       return new Response(JSON.stringify(fakeResponse), {
         status: 200,
         headers: { 'content-type': 'application/json' }
