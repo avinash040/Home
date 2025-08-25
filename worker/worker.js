@@ -58,11 +58,25 @@ export default {
         const scored = vectors
           .map((v) => ({
             text: v.text,
+            source: v.source,
             score: cosineSimilarity(query, v.embedding),
           }))
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 3);
-        context = scored.map((s) => s.text).join("\n\n");
+          .sort((a, b) => b.score - a.score);
+
+        const unique = [];
+        const seen = new Set();
+        for (const s of scored) {
+          const company = s.source.includes("#")
+            ? s.source.split("#")[1].split("/")[0]
+            : s.source.split("/")[0];
+          if (!seen.has(company)) {
+            unique.push(s);
+            seen.add(company);
+          }
+          if (unique.length === 3) break;
+        }
+
+        context = unique.map((s) => s.text).join("\n\n");
       } catch {
         // ignore retrieval errors and fall back to no context
       }

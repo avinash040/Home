@@ -26,23 +26,59 @@ async function getFiles(dir) {
   return files;
 }
 
+function slugify(str) {
+  return str
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function splitIntoChunks(text, file) {
+  let chunks = [];
+  let sources = [];
+
+  if (file.endsWith('.html')) {
+    const articles = text.split(/<\/article>/i).map((a) => a.trim()).filter(Boolean);
+    if (articles.length > 1) {
+      articles.forEach((article, i) => {
+        const match = article.match(/<h3>(.*?)<\/h3>/i);
+        const slug = match ? slugify(match[1]) : `chunk-${i}`;
+        chunks.push(article + '</article>');
+        sources.push(`${path.relative(root, file)}#${slug}`);
+      });
+    }
+  }
+
+  if (!chunks.length) {
+    chunks = [text];
+    sources = [path.relative(root, file)];
+  }
+
+  return { chunks, sources };
+}
+
 const root = process.cwd();
 const files = await getFiles(root);
 const vectors = [];
 for (const file of files) {
   const text = await fs.readFile(file, 'utf8');
-  const res = await fetch(EMBED_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-goog-api-key': apiKey,
-    },
-    body: JSON.stringify({ contents: [{ parts: [{ text }] }] }),
-  });
-  const data = await res.json();
-  const embedding = data.embedding?.values ?? [];
-  const id = crypto.createHash('sha256').update(text).digest('hex');
-  vectors.push({ id, text, source: path.relative(root, file), embedding });
+  const { chunks, sources } = splitIntoChunks(text, file);
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i];
+    const source = sources[i];
+    const res = await fetch(EMBED_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey,
+      },
+      body: JSON.stringify({ contents: [{ parts: [{ text: chunk }] }] }),
+    });
+    const data = await res.json();
+    const embedding = data.embedding?.values ?? [];
+    const id = crypto.createHash('sha256').update(chunk).digest('hex');
+    vectors.push({ id, text: chunk, source, embedding });
+  }
 }
 
 await fs.mkdir(path.join(root, 'data'), { recursive: true });

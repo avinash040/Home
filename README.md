@@ -33,3 +33,13 @@ Then deploy the worker from the repository root:
 ```sh
 npx wrangler deploy
 ```
+
+## Building the vector index
+
+The chat endpoint retrieves context from embeddings stored in `data/vectors.json`. After modifying the site's content, rebuild this file so new sections are indexed:
+
+```sh
+npm run build:vectors
+```
+
+The build script now breaks large HTML files into article-sized chunks, ensuring details from every work experience are available for retrieval. Set `GEMINI_API_KEY` in your environment before running the command.
