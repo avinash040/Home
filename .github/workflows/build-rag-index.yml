@@ -16,12 +16,12 @@ jobs:
         docs/**/*.md
         **/*.md
         **/*.txt
+        **/*.html
       EXCLUDE_GLOBS: |
         **/node_modules/**
         **/dist/**
         **/*.png
         **/*.jpg
-        **/*.pdf
         **/.git/**
         **/*.min.js
       CHUNK_CHARS: 1400
