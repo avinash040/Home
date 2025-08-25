@@ -200,13 +200,16 @@
         const res = await fetch(`${WORKER_URL}/api/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text })
+          body: JSON.stringify({ prompt: text })
         });
         const data = await res.json();
-        if (data.answer) {
-          appendMessage('bot', data.answer);
+        const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (answer) {
+          appendMessage('bot', answer);
           if (data.sources) {
-            const src = data.sources.map(s => `${s.label} • ${s.path} (${s.score.toFixed(2)})`).join(', ');
+            const src = data.sources
+              .map(s => `${s.label} • ${s.path} (${s.score.toFixed(2)})`)
+              .join(', ');
             appendMessage('bot', `Sources: ${src}`, 'sources');
           }
         } else if (data.error) {
