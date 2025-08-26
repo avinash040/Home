@@ -41,6 +41,7 @@ export default {
       const prompt = body?.prompt ?? "Say hello and confirm the proxy works.";
 
       let context = "";
+      let sources = [];
       try {
         const embedRes = await fetch(
           "https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent",
@@ -63,17 +64,9 @@ export default {
           }))
           .sort((a, b) => b.score - a.score);
 
-        const unique = [];
-        const seen = new Set();
-        for (const s of scored) {
-          if (!seen.has(s.source)) {
-            unique.push(s);
-            seen.add(s.source);
-          }
-          if (unique.length === 3) break;
-        }
-
-        context = unique.map((s) => s.text).join("\n\n");
+        const top = scored.slice(0, 5);
+        context = top.map((s) => s.text).join("\n\n");
+        sources = top.map((s) => ({ path: s.source, score: s.score }));
       } catch {
         // ignore retrieval errors and fall back to no context
       }
@@ -102,6 +95,9 @@ export default {
       );
 
       const data = await res.json();
+      if (sources.length) {
+        data.sources = sources;
+      }
       return new Response(JSON.stringify(data), {
         status: res.status,
         headers: {

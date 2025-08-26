@@ -41,7 +41,8 @@ test('chat worker performs retrieval and forwards context', async () => {
     const res = await worker.fetch(request, env);
     assert.equal(res.status, 200);
     const data = await res.json();
-    assert.deepEqual(data, fakeResponse);
+    assert.deepEqual(data.candidates, fakeResponse.candidates);
+    assert.equal(data.sources.length, 5);
     assert.equal(calls.length, 2);
   } finally {
     global.fetch = originalFetch;
