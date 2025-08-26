@@ -26,32 +26,36 @@ async function getFiles(dir) {
   return files;
 }
 
-function slugify(str) {
-  return str
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
 function splitIntoChunks(text, file) {
-  let chunks = [];
-  let sources = [];
+  const chunks = [];
+  const sources = [];
 
   if (file.endsWith('.html')) {
-    const articles = text.split(/<\/article>/i).map((a) => a.trim()).filter(Boolean);
-    if (articles.length > 1) {
+    const articles = text.match(/<article[\s\S]+?<\/article>/g) || [];
+    if (articles.length > 0) {
       articles.forEach((article, i) => {
-        const match = article.match(/<h3>(.*?)<\/h3>/i);
-        const slug = match ? slugify(match[1]) : `chunk-${i}`;
-        chunks.push(article + '</article>');
+        const idMatch = article.match(/id="([^"]+)"/);
+        const slug = idMatch ? idMatch[1] : `article-${i}`;
+        chunks.push(article);
         sources.push(`${path.relative(root, file)}#${slug}`);
       });
+    } else {
+      // If no articles, chunk by sections with IDs
+      const sections = text.match(/<section id="[^"]+"[\s\S]+?<\/section>/g) || [];
+      if (sections.length > 0) {
+        sections.forEach((section, i) => {
+          const idMatch = section.match(/id="([^"]+)"/);
+          const slug = idMatch ? idMatch[1] : `section-${i}`;
+          chunks.push(section);
+          sources.push(`${path.relative(root, file)}#${slug}`);
+        });
+      }
     }
   }
 
-  if (!chunks.length) {
-    chunks = [text];
-    sources = [path.relative(root, file)];
+  if (chunks.length === 0) {
+    chunks.push(text);
+    sources.push(path.relative(root, file));
   }
 
   return { chunks, sources };
