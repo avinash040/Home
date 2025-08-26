@@ -66,12 +66,9 @@ export default {
         const unique = [];
         const seen = new Set();
         for (const s of scored) {
-          const company = s.source.includes("#")
-            ? s.source.split("#")[1].split("/")[0]
-            : s.source.split("/")[0];
-          if (!seen.has(company)) {
+          if (!seen.has(s.source)) {
             unique.push(s);
-            seen.add(company);
+            seen.add(s.source);
           }
           if (unique.length === 3) break;
         }
