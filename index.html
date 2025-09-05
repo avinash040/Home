@@ -5,11 +5,9 @@
   <title>Avinash Kothapalli</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    #chat-container { max-width: 600px; margin: 2rem auto; }
     #chat-log {
       border: 1px solid #ccc;
       padding: 1rem;
-      height: 300px;
       overflow-y: auto;
       background-color: #fafafa;
       background-image: url('IMG_7422.jpeg');
@@ -43,9 +41,10 @@
     </nav>
   </header>
 
-  <main>
-    <section id="chat">
+  <main id="layout">
+    <section id="chat" class="highlight">
       <h2>Chat</h2>
+      <p class="chat-intro">Use the chatbot to ask about my experience, skills, or projects.</p>
       <div id="chat-container">
         <div id="chat-log"></div>
         <form id="chat-form">
@@ -55,6 +54,7 @@
       </div>
     </section>
 
+    <div id="info">
     <section id="about">
       <h2>About</h2>
       <p>I am a senior delivery software engineer at Nokia with experience developing custom network software solutions for service providers and enterprises. I create API interfaces for service provisioning, lifecycle management, and automation using YANG models and REST.</p>
@@ -188,6 +188,7 @@
       <button id="resume-toggle">Show Resume</button>
       <iframe id="resume-frame" src="Resume_AvinashKothapalli.pdf"></iframe>
     </section>
+    </div>
   </main>
 
   <footer>
