@@ -1,45 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap');
+
+:root {
+  --font-body: 'Open Sans', sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
+  --color-bg: #f5f7fa;
+  --color-text: #333;
+  --color-primary: #1565c0;
+  --color-secondary: #42a5f5;
+  --color-card-bg: #ffffff;
+  --color-border: #e0e0e0;
+  --color-nav-bg: var(--color-primary);
+  --color-nav-text: #fff;
+  --color-footer-bg: var(--color-primary);
+  --color-bot-bg: #e3f2fd;
+}
+
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-body);
   line-height: 1.6;
   margin: 0;
-  padding: 0;
-  color: #333;
-  background: #fff;
+  background: var(--color-bg);
+  color: var(--color-text);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body.dark {
-  background: #121212;
-  color: #eee;
+  --color-bg: #121212;
+  --color-text: #eee;
+  --color-card-bg: #1e1e1e;
+  --color-border: #333;
+  --color-nav-bg: #1e1e1e;
+  --color-footer-bg: #1e1e1e;
+  --color-bot-bg: #263238;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 header {
-  background: #333;
-  color: #fff;
-  padding: 20px;
-  text-align: center;
+  background: var(--color-nav-bg);
+  color: var(--color-nav-text);
+}
+
+header .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+
+header h1 {
+  font-family: var(--font-heading);
+  margin: 0;
+}
+
+nav {
+  margin-top: 1rem;
 }
 
 nav a {
-  margin: 0 10px;
-  color: #fff;
+  margin: 0 0.5rem;
+  color: var(--color-nav-text);
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
+}
+
+nav a:hover {
+  text-decoration: underline;
 }
 
 nav button {
-  margin-left: 20px;
-  padding: 5px 10px;
-}
-
-section {
-  padding: 20px;
+  margin-left: 1rem;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 4px;
+  background: var(--color-secondary);
+  color: #fff;
+  cursor: pointer;
 }
 
 main#layout {
   display: flex;
   align-items: flex-start;
   gap: 2rem;
+  padding: 2rem 0;
+}
+
+section {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 #info {
@@ -53,11 +108,8 @@ main#layout {
 }
 
 #chat.highlight {
-  border: 2px solid #4caf50;
-  border-radius: 8px;
-  padding: 20px;
-  background: #fefefe;
-  box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 10px rgba(66, 165, 245, 0.3);
 }
 
 .chat-intro {
@@ -67,17 +119,66 @@ main#layout {
 
 #chat-container {
   width: 100%;
-  margin: 0;
 }
 
 #chat-log {
+  border: 1px solid var(--color-border);
+  padding: 1rem;
   height: 400px;
+  overflow-y: auto;
+  background-color: var(--color-card-bg);
+  background-image: url('IMG_7422.jpeg');
+  background-size: cover;
+  background-position: center 20%;
+  background-repeat: no-repeat;
+  border-radius: 8px;
 }
 
-@media (max-width: 800px) {
-  main#layout {
-    flex-direction: column;
-  }
+.message {
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.message.user {
+  background: var(--color-secondary);
+  color: #fff;
+}
+
+.message.bot {
+  background: var(--color-bot-bg);
+}
+
+.message.sources {
+  background: transparent;
+  font-size: 0.8rem;
+  color: var(--color-text);
+}
+
+#chat-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+#chat-input {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+}
+
+#chat-form button {
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#chat-form button:hover {
+  background: var(--color-secondary);
 }
 
 #projects-list .project {
@@ -96,21 +197,26 @@ main#layout {
 }
 
 footer {
-  background: #333;
+  background: var(--color-footer-bg);
   color: #fff;
   text-align: center;
-  padding: 10px;
+  padding: 1rem 0;
   margin-top: 40px;
 }
 
-body.dark header {
-  background: #222;
+@media (max-width: 800px) {
+  main#layout {
+    flex-direction: column;
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  nav button {
+    margin-top: 0.5rem;
+  }
 }
 
-body.dark nav a {
-  color: #eee;
-}
-
-body.dark footer {
-  background: #222;
-}
