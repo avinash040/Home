@@ -6,7 +6,17 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     #chat-container { max-width: 600px; margin: 2rem auto; }
-    #chat-log { border: 1px solid #ccc; padding: 1rem; height: 300px; overflow-y: auto; background: #fafafa; }
+    #chat-log {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      height: 300px;
+      overflow-y: auto;
+      background-color: #fafafa;
+      background-image: url('IMG_7422.jpeg');
+      background-size: cover;
+        background-position: center 25%;
+      background-repeat: no-repeat;
+    }
     .message { padding: .5rem; border-radius: 4px; margin-bottom: .5rem; }
     .message.user { background: #e0f7fa; }
     .message.bot { background: #f1f8e9; }
@@ -189,11 +199,16 @@
     const log = document.getElementById('chat-log');
     const form = document.getElementById('chat-form');
     const input = document.getElementById('chat-input');
+    let hasChatted = false;
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const text = input.value.trim();
       if (!text) return;
+      if (!hasChatted) {
+        log.style.backgroundImage = 'none';
+        hasChatted = true;
+      }
       appendMessage('user', text);
       input.value = '';
       try {
