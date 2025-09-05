@@ -2,46 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Avinash Kothapalli</title>
   <link rel="stylesheet" href="styles.css">
-  <style>
-    #chat-log {
-      border: 1px solid #ccc;
-      padding: 1rem;
-      overflow-y: auto;
-      background-color: #fafafa;
-      background-image: url('IMG_7422.jpeg');
-      background-size: cover;
-      /* Shift image upward to better frame the subject's face and hoodie text */
-      background-position: center 20%;
-      background-repeat: no-repeat;
-    }
-    .message { padding: .5rem; border-radius: 4px; margin-bottom: .5rem; }
-    .message.user { background: #e0f7fa; }
-    .message.bot { background: #f1f8e9; }
-    .message.sources { background: #fff; font-size: 0.8rem; color: #555; }
-    #chat-form { display: flex; gap: .5rem; margin-top: 1rem; }
-    #chat-input { flex: 1; }
-  </style>
 </head>
 <body>
   <header>
-    <h1>Avinash Kothapalli</h1>
-    <p>Senior Software Developer</p>
-    <nav>
-      <a href="#about">About</a> |
-      <a href="#experience">Experience</a> |
-      <a href="#skills">Skills</a> |
-      <a href="#projects">Projects</a> |
-      <a href="#strengths">Key Strengths</a> |
-      <a href="#interests">Interests</a> |
-      <a href="#contact">Contact</a> |
-      <a href="#resume">Resume</a>
-      <button id="theme-toggle">Toggle Theme</button>
-    </nav>
+    <div class="container">
+      <h1>Avinash Kothapalli</h1>
+      <p>Senior Software Developer</p>
+      <nav>
+        <a href="#about">About</a> |
+        <a href="#experience">Experience</a> |
+        <a href="#skills">Skills</a> |
+        <a href="#projects">Projects</a> |
+        <a href="#strengths">Key Strengths</a> |
+        <a href="#interests">Interests</a> |
+        <a href="#contact">Contact</a> |
+        <a href="#resume">Resume</a>
+        <button id="theme-toggle">Toggle Theme</button>
+      </nav>
+    </div>
   </header>
 
-  <main id="layout">
+  <main id="layout" class="container">
     <section id="chat" class="highlight">
       <h2>Chat</h2>
       <p class="chat-intro">Use the chatbot to ask about my experience, skills, or projects.</p>
@@ -192,7 +176,9 @@
   </main>
 
   <footer>
-    <p>&copy; <span id="year"></span> Avinash Kothapalli</p>
+    <div class="container">
+      <p>&copy; <span id="year"></span> Avinash Kothapalli</p>
+    </div>
   </footer>
   <script src="script.js"></script>
   <script>
