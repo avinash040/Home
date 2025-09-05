@@ -209,6 +209,14 @@ footer {
     flex-direction: column;
   }
 
+  #chat {
+    order: 1;
+  }
+
+  #info {
+    order: 2;
+  }
+
   nav {
     display: flex;
     flex-wrap: wrap;
