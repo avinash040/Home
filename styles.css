@@ -34,8 +34,50 @@ nav button {
 
 section {
   padding: 20px;
-  max-width: 900px;
-  margin: auto;
+}
+
+main#layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+#info {
+  order: 1;
+  flex: 1;
+}
+
+#chat {
+  order: 2;
+  flex: 1.2;
+}
+
+#chat.highlight {
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+  padding: 20px;
+  background: #fefefe;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+}
+
+.chat-intro {
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+#chat-container {
+  width: 100%;
+  margin: 0;
+}
+
+#chat-log {
+  height: 400px;
+}
+
+@media (max-width: 800px) {
+  main#layout {
+    flex-direction: column;
+  }
 }
 
 #projects-list .project {
