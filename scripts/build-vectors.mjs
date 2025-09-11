@@ -26,9 +26,17 @@ async function getFiles(dir) {
   return files;
 }
 
+function slugify(str) {
+  return str
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
 function splitIntoChunks(text, file) {
   const chunks = [];
   const sources = [];
+  const labels = [];
 
   if (file.endsWith('.html')) {
     const articles = text.match(/<article[\s\S]+?<\/article>/g) || [];
@@ -40,14 +48,20 @@ function splitIntoChunks(text, file) {
         sources.push(`${path.relative(root, file)}#${slug}`);
       });
     } else {
-      // If no articles, chunk by sections with IDs
-      const sections = text.match(/<section id="[^"]+"[\s\S]+?<\/section>/g) || [];
+      // If no articles, chunk by sections (use heading text if id missing)
+      const sections = text.match(/<section[\s\S]+?<\/section>/g) || [];
       if (sections.length > 0) {
         sections.forEach((section, i) => {
           const idMatch = section.match(/id="([^"]+)"/);
-          const slug = idMatch ? idMatch[1] : `section-${i}`;
+          let slug = idMatch ? idMatch[1] : '';
+          if (!slug) {
+            const headingMatch = section.match(/<h[1-6][^>]*>([^<]+)<\/h[1-6]>/);
+            slug = headingMatch ? slugify(headingMatch[1]) : `section-${i}`;
+          }
           chunks.push(section);
           sources.push(`${path.relative(root, file)}#${slug}`);
+          const headingMatch = section.match(/<h[1-6][^>]*>([^<]+)<\/h[1-6]>/);
+          labels.push(headingMatch ? headingMatch[1] : slug);
         });
       }
     }
@@ -56,9 +70,10 @@ function splitIntoChunks(text, file) {
   if (chunks.length === 0) {
     chunks.push(text);
     sources.push(path.relative(root, file));
+    labels.push(path.basename(file));
   }
 
-  return { chunks, sources };
+  return { chunks, sources, labels };
 }
 
 const root = process.cwd();
@@ -66,10 +81,11 @@ const files = await getFiles(root);
 const vectors = [];
 for (const file of files) {
   const text = await fs.readFile(file, 'utf8');
-  const { chunks, sources } = splitIntoChunks(text, file);
+  const { chunks, sources, labels } = splitIntoChunks(text, file);
   for (let i = 0; i < chunks.length; i++) {
     const chunk = chunks[i];
     const source = sources[i];
+    const label = labels[i];
     const res = await fetch(EMBED_URL, {
       method: 'POST',
       headers: {
@@ -81,7 +97,7 @@ for (const file of files) {
     const data = await res.json();
     const embedding = data.embedding?.values ?? [];
     const id = crypto.createHash('sha256').update(chunk).digest('hex');
-    vectors.push({ id, text: chunk, source, embedding });
+    vectors.push({ id, text: chunk, source, label, embedding });
   }
 }
 

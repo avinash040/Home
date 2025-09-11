@@ -60,13 +60,18 @@ export default {
           .map((v) => ({
             text: v.text,
             source: v.source,
+            label: v.label,
             score: cosineSimilarity(query, v.embedding),
           }))
           .sort((a, b) => b.score - a.score);
 
         const top = scored.slice(0, 5);
         context = top.map((s) => s.text).join("\n\n");
-        sources = top.map((s) => ({ path: s.source, score: s.score }));
+        sources = top.map((s) => ({
+          path: s.source,
+          label: s.label || s.source,
+          score: s.score,
+        }));
       } catch {
         // ignore retrieval errors and fall back to no context
       }

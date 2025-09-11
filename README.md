@@ -42,4 +42,4 @@ The chat endpoint retrieves context from embeddings stored in `data/vectors.json
 npm run build:vectors
 ```
 
-The build script now breaks large HTML files into article-sized chunks, ensuring details from every work experience are available for retrieval. Set `GEMINI_API_KEY` in your environment before running the command.
+The build script now breaks large HTML files into article-sized chunks and automatically slugs section headings when IDs are missing. This ensures details from every work experience across the site are indexed for retrieval. Set `GEMINI_API_KEY` in your environment before running the command.
