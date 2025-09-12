@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
 const EMBED_URL = 'https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent';
 const apiKey = process.env.GEMINI_API_KEY;
@@ -19,7 +20,11 @@ async function getFiles(dir) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       files.push(...await getFiles(full));
-    } else if (entry.name.endsWith('.html') || entry.name.endsWith('.md')) {
+    } else if (
+      entry.name.endsWith('.html') ||
+      entry.name.endsWith('.md') ||
+      entry.name.endsWith('.pdf')
+    ) {
       files.push(full);
     }
   }
@@ -46,6 +51,8 @@ function splitIntoChunks(text, file) {
         const slug = idMatch ? idMatch[1] : `article-${i}`;
         chunks.push(article);
         sources.push(`${path.relative(root, file)}#${slug}`);
+        const headingMatch = article.match(/<h[1-6][^>]*>([^<]+)<\/h[1-6]>/);
+        labels.push(headingMatch ? headingMatch[1] : slug);
       });
     } else {
       // If no articles, chunk by sections (use heading text if id missing)
@@ -80,7 +87,14 @@ const root = process.cwd();
 const files = await getFiles(root);
 const vectors = [];
 for (const file of files) {
-  const text = await fs.readFile(file, 'utf8');
+  let text;
+  if (file.endsWith('.pdf')) {
+    const data = await fs.readFile(file);
+    const parsed = await pdfParse(data);
+    text = parsed.text;
+  } else {
+    text = await fs.readFile(file, 'utf8');
+  }
   const { chunks, sources, labels } = splitIntoChunks(text, file);
   for (let i = 0; i < chunks.length; i++) {
     const chunk = chunks[i];
