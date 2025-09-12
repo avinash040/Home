@@ -83,10 +83,17 @@ nav button {
 }
 
 main#layout {
+  padding: 2rem 0;
+}
+
+#top {
   display: flex;
   align-items: flex-start;
   gap: 2rem;
-  padding: 2rem 0;
+}
+
+#top > section {
+  flex: 1;
 }
 
 section {
@@ -98,13 +105,7 @@ section {
 }
 
 #info {
-  order: 1;
-  flex: 1;
-}
-
-#chat {
-  order: 2;
-  flex: 1.2;
+  margin-top: 2rem;
 }
 
 #chat.highlight {
@@ -205,16 +206,8 @@ footer {
 }
 
 @media (max-width: 800px) {
-  main#layout {
+  #top {
     flex-direction: column;
-  }
-
-  #chat {
-    order: 1;
-  }
-
-  #info {
-    order: 2;
   }
 
   nav {
