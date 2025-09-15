@@ -134,7 +134,7 @@ section {
   background-color: var(--color-card-bg);
   background-image: url('Gemini_Generated_Image.png');
   background-size: cover;
-  background-position: center 20%;
+  background-position: center 45%;
   background-repeat: no-repeat;
   border-radius: 8px;
 }
