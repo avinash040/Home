@@ -87,7 +87,7 @@ main#layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
-    "chat about"
+    "about chat"
     "info info";
   gap: 2rem;
 }
@@ -213,8 +213,8 @@ footer {
   main#layout {
     grid-template-columns: 1fr;
     grid-template-areas:
-      "chat"
       "about"
+      "chat"
       "info";
   }
 
