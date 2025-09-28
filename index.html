@@ -227,10 +227,101 @@
 
     function appendMessage(role, text, extra = '') {
       const div = document.createElement('div');
-      div.className = `message ${role} ${extra}`;
-      div.textContent = text;
+      div.className = `message ${role} ${extra}`.trim();
+      const message =
+        typeof text === 'string' ? text : text ? JSON.stringify(text, null, 2) : '';
+      const fragments = formatMessage(message);
+
+      if (fragments.length === 0) {
+        const fallback = document.createElement('p');
+        fallback.textContent = message;
+        div.appendChild(fallback);
+      } else {
+        fragments.forEach(node => div.appendChild(node));
+      }
+
       log.appendChild(div);
       log.scrollTop = log.scrollHeight;
+    }
+
+    function formatMessage(text) {
+      const nodes = [];
+      const lines = (text ?? '').replace(/\r/g, '').split('\n');
+      const doc = document;
+      let paragraph = [];
+      let listEl = null;
+      let listType = null;
+
+      const flushParagraph = () => {
+        if (!paragraph.length) return;
+        const p = doc.createElement('p');
+        p.innerHTML = formatInline(paragraph.join(' '));
+        nodes.push(p);
+        paragraph = [];
+      };
+
+      const flushList = () => {
+        if (!listEl) return;
+        nodes.push(listEl);
+        listEl = null;
+        listType = null;
+      };
+
+      for (const rawLine of lines) {
+        const trimmed = rawLine.trim();
+        if (!trimmed) {
+          flushParagraph();
+          flushList();
+          continue;
+        }
+
+        const bulletMatch = trimmed.match(/^[-*]\s+(.*)$/);
+        const orderedMatch = trimmed.match(/^(\d+)\.\s+(.*)$/);
+
+        if (bulletMatch) {
+          flushParagraph();
+          if (!listEl || listType !== 'ul') {
+            flushList();
+            listEl = doc.createElement('ul');
+            listType = 'ul';
+          }
+          const li = doc.createElement('li');
+          li.innerHTML = formatInline(bulletMatch[1]);
+          listEl.appendChild(li);
+          continue;
+        }
+
+        if (orderedMatch) {
+          flushParagraph();
+          if (!listEl || listType !== 'ol') {
+            flushList();
+            listEl = doc.createElement('ol');
+            listType = 'ol';
+          }
+          const li = doc.createElement('li');
+          li.innerHTML = formatInline(orderedMatch[2]);
+          listEl.appendChild(li);
+          continue;
+        }
+
+        flushList();
+        paragraph.push(trimmed);
+      }
+
+      flushParagraph();
+      flushList();
+
+      return nodes;
+    }
+
+    function formatInline(text) {
+      const span = document.createElement('span');
+      span.textContent = text;
+      let html = span.innerHTML;
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+      html = html.replace(/\[(.+?)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+      return html;
     }
   </script>
 </body>
