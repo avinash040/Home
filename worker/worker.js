@@ -1,5 +1,13 @@
-import vectors from "../data/vectors.json" assert { type: "json" };
+import siteContext from "../data/site-context.json" assert { type: "json" };
+// import vectors from "../data/vectors.json" assert { type: "json" }; // RAG deprecated but kept for reference
 
+const CONTEXT_FILES = siteContext.files;
+
+function buildFullContext() {
+  return CONTEXT_FILES.map((file) => `File: ${file.path}\n${file.content}`);
+}
+
+/*
 function cosineSimilarity(a, b) {
   const len = Math.min(a.length, b.length);
   let dot = 0;
@@ -15,6 +23,7 @@ function cosineSimilarity(a, b) {
   }
   return dot / (Math.sqrt(normA) * Math.sqrt(normB));
 }
+*/
 
 export default {
   async fetch(request, env) {
@@ -40,6 +49,15 @@ export default {
       }
       const prompt = body?.prompt ?? "Say hello and confirm the proxy works.";
 
+      const contextSections = buildFullContext();
+      const context = contextSections.join("\n\n---\n\n");
+      const sources = CONTEXT_FILES.map((file) => ({
+        path: file.path,
+        label: file.label,
+        score: 1,
+      }));
+
+      /*
       let context = "";
       let sources = [];
       try {
@@ -75,6 +93,7 @@ export default {
       } catch {
         // ignore retrieval errors and fall back to no context
       }
+      */
 
       const instruction =
         "You are answering on behalf of Avinash Kothapalli. " +
@@ -86,7 +105,7 @@ export default {
       parts.push({ text: prompt });
 
       const res = await fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent",
         {
           method: "POST",
           headers: {
