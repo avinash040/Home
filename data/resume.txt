@@ -1,0 +1,84 @@
+Avinash Kothapalli
+Senior Software Developer
+avinashvkothapalli@gmail.com
++1-613-304-6958
+Ottawa, ON
+github.com/avinash040
+linkedin.com/in/avinash040
+Skills
+Languages
+Python, Javascript, Java, C, C++
+Core Technologies
+Distributed Systems, SDN/SD-WAN, 
+Networking Protocols,  
+VMware/OpenStack, Microservices, 
+Serverless computing, Information 
+Centric Networking
+API Protocols
+REST, Yang/RESTCONF, gRPC, Kafka, 
+Kafka-Streams, SOAP
+CI/CD
+Docker, Kubernetes, AWS, Jenkins, 
+GIT, VSCode
+Supplemantal
+Game Dev: UE4, Jmonkey, Blender
+ML: GPT-3, Harmonai
+Interests
+Sports (Table Tennis, Volleyball,
+Skiing, Biking, Running)
+Music Production (Guitar, Sonic
+Pi, Garageband)
+History / Travel
+Professional Experience
+Senior Delivery Software Engineer, Nokia
+04/2020 – present | Ottawa, Canada
+Develop custom network software solutions for service 
+providers and enterprises
+•Create API interfaces for service provisioning, life cycle 
+management, un-provisioning and debugging using Yang 
+Models and REST
+•Provide solutions to automate network service deployment 
+based on customer network configuration and OSS system 
+requirements
+•Deploy custom scripts written in JavaScript and Python, 
+utilizing Nokia's NSP applications framework for workflow 
+management, service discovery and deployment
+•Interact closely with various telecom industry customers and 
+partners (Bell, Verizon, Mobily, TPG, Elisa, etc)
+•Guide Junior team members and Interns
+•Created custom VS code webview extensions using NodeJS, 
+React and Bootstrap
+Member of the Technical Staff – II, VMware
+07/2016 – 04/2020 | Ottawa, Canada
+Involved in developing key proof of concept software for the 
+Telco BU
+•Worked on converting the Smarts Alerting Engine architecture 
+into a Microservices model using Kubernetes, Kafka and gRPC
+•Core java development for Versa SDWAN and  SAS integration
+•Developed a Python based high performance data collector 
+and a push gateway that extracts information from various 
+third-party entities such as SD-WAN and SDN orchestrators
+•Created a Python based Velocloud SD-WAN network simulator 
+using the corresponding swagger REST model
+•Worked on prototype Angular Frontend UI for the Smarts 
+Alerting Engine product
+•Evaluated Kafka Streams and Flink for KPI metric processing
+•Took responsibility for Nokia ASAM and VMware SAS 
+certification process for the customer British Telecom
+Software Engineer, Cisco Systems
+07/2012 – 06/2016 | Ottawa, Canada
+Protocol level software development for Cisco IOS/XR
+•Worked on implementing MPLS TP performance management 
+(RFC 6374) and linear protection (RFC 6378)
+•Contributed in the development of evpn, vpws, vpls, l2tpv3 
+and l2-bridge domain
+•Developed tools for unit testing internally
+•Expertise in LDP, BGP, and MPLS Traffic Engineering
+•Maintained team's private cloud infrastructure using Cisco UCS 
+servers with vSphere and OpenStack
+Software Designer / Protocol Associate (Coop), Blackberry
+05/2010 – 09/2011 | Ottawa, Canada
+Interned with different teams over a period of 16 months
+•Developed minor features for the Blackberry device Radio and 
+OS modules in C and Java
+•Analyzed wireless protocol performance 
